@@ -1,0 +1,175 @@
+/* Variables */
+:root {
+    --primary: #2C3E50;      /* Dark blue slate - for headers and navigation */
+    --secondary: #3498DB;    /* Bright blue - for highlights and buttons */
+    --tertiary: #1ABC9C;     /* Teal - for accents */
+    --background: #ECF0F1;   /* Light gray - for backgrounds */
+    --text: #2C3E50;         /* Dark blue slate - for text */
+    --light-text: #7F8C8D;   /* Medium gray - for secondary text */
+    --success: #27AE60;      /* Green - for success indicators */
+    --warning: #F39C12;      /* Amber - for warnings */
+    --error: #E74C3C;        /* Red - for errors */
+    --light-bg: #F5F7FA;     /* Very light gray - for cards and panels */
+    --border: #BDC3C7;       /* Light gray - for borders */
+  }
+  
+  /* Overall Layout */
+  body {
+    background-color: var(--background);
+    color: var(--text);
+    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  }
+  
+  .app-container {
+    min-height: 100vh;
+    margin: 0;
+  }
+  
+  /* Sidebar Styling */
+  .sidebar {
+    background-color: var(--primary);
+    color: white;
+    min-height: 100vh;
+    padding: 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+  }
+  
+  .sidebar-content {
+    padding: 20px;
+  }
+  
+  .navbar-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .navbar-title {
+    margin-top: 10px;
+    font-size: 1.4rem;
+    font-weight: 500;
+  }
+  
+  .nav-links {
+    margin-bottom: 20px;
+  }
+  
+  .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    margin-bottom: 5px;
+    transition: all 0.2s;
+  }
+  
+  .nav-link:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .nav-link.active {
+    background-color: var(--secondary);
+    color: white;
+  }
+  
+  .filter-section {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 15px;
+  }
+  
+  .filter-list {
+    margin-left: 10px;
+  }
+  
+  /* Main Content Area */
+  .content-wrapper {
+    padding: 20px 30px;
+    overflow-y: auto;
+  }
+  
+  .page-header {
+    margin-bottom: 20px;
+  }
+  
+  /* Target List Styling */
+  .target-list-col {
+    border-right: 1px solid var(--border);
+  }
+  
+  /* Structure Viewer Styling */
+  .structure-viewer-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    height: 100%;
+  }
+  
+  .structure-controls {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .empty-viewer {
+    height: 300px;
+    background-color: var(--light-bg);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Target Details Styling */
+  .target-details-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    height: 100%;
+  }
+  
+  .target-name {
+    font-weight: 600;
+    margin-right: 10px;
+    display: inline-block;
+  }
+  
+  /* Compounds Section Styling */
+  .compounds-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+  }
+  
+  .compound-card {
+    background-color: var(--light-bg);
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+  }
+  
+  .compound-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .compound-structure {
+    max-width: 100%;
+    border-radius: 4px;
+  }
+  
+  .compound-name {
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  
+  .compound-props, .compound-stage, .compound-activity {
+    margin: 5px 0;
+    font-size: 0.9rem;
+  }
