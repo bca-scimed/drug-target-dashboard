@@ -1,4 +1,4 @@
-#!/Users/brandonadkins/Desktop/drug_target_dashboard/targetdash_env/bin/python
+#!/Users/brandonadkins/Desktop/drug_target_dashboard/targetdash_env/bin/python3
 """Download GSM/GSE as SRA or FASTQ files."""
 import sys
 import os

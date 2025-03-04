@@ -2,8 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import html, dcc, dash_table, callback
 from dash.dependencies import Input, Output, State
 from app.components.structure_form import create_structure_form
-from app.models.structures import Structure
-from app.models.targets import Target
+from app.models.targets import Structure, Target  # Updated this line
 from app.models.database import SessionLocal
 import pandas as pd
 
