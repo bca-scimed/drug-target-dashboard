@@ -41,14 +41,14 @@ app.layout = html.Div([
 )
 def display_page(pathname):
     if pathname == '/diseases':
-        return diseases_layout
+        return diseases_layout()  # Note the parentheses to call the function
     elif pathname == '/compounds':
-        return compounds_layout
+        return compounds_layout()
     elif pathname == '/structures':
-        return structures_layout
+        return structures_layout()
     else:
         # Default to targets page
-        return targets_layout
+        return targets_layout()
 
 if __name__ == '__main__':
     app.run_server(debug=True)
