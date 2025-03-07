@@ -4,6 +4,7 @@ from app.models.database import Base
 
 class Structure(Base):
     __tablename__ = "structures"
+    __table_args__ = {'extend_existing': True}
     
     id = Column(Integer, primary_key=True, index=True)
     target_id = Column(Integer, ForeignKey("targets.id"), index=True)

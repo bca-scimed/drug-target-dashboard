@@ -5,6 +5,7 @@ from app.models.database import Base
 
 class Target(Base):
     __tablename__ = "targets"
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
@@ -26,6 +27,7 @@ class Target(Base):
 
 class Structure(Base):
     __tablename__ = "structures"
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True)
     target_id = Column(Integer, ForeignKey("targets.id"))

@@ -1,60 +1,139 @@
-from dash import html, dcc
+# components/compound_viewer.py
+
+import dash
+from dash import dcc, html
 import dash_bootstrap_components as dbc
+from dash.dependencies import Input, Output, State
 import base64
+from io import BytesIO
+
+# Import RDKit for molecular visualization
 from rdkit import Chem
 from rdkit.Chem import Draw
-import io
+from rdkit.Chem import AllChem
 
-def create_compound_card(compound):
-    """Creates a card displaying compound information and structure"""
+class CompoundViewer:
+    """
+    Component for rendering molecular structures using RDKit.
+    """
+    def __init__(self, app):
+        self.app = app
+        self.register_callbacks()
     
-    # Generate 2D structure from SMILES
-    mol = Chem.MolFromSmiles(compound["smiles"])
-    img = Draw.MolToImage(mol, size=(200, 200))
-    
-    # Convert image to base64 for display
-    buffered = io.BytesIO()
-    img.save(buffered, format="PNG")
-    img_str = base64.b64encode(buffered.getvalue()).decode()
-    
-    return dbc.Card([
-        dbc.Row([
-            # Image on the left
-            dbc.Col(
-                html.Img(src=f"data:image/png;base64,{img_str}", className="compound-structure"),
-                width=4
-            ),
-            # Details on the right
-            dbc.Col([
-                html.H5(compound["name"], className="compound-name"),
-                html.P(f"MW: {compound['molecular_weight']:.2f} | LogP: {compound['logp']:.2f}", className="compound-props"),
-                html.P(f"Stage: {compound['development_stage']}", className="compound-stage"),
-                html.P(f"Activity: {compound['activity_value']} {compound['activity_unit']} ({compound['activity_type']})", className="compound-activity"),
-            ], width=8)
-        ]),
-        dbc.CardFooter(
-            dbc.Button("View Details", size="sm", color="primary", outline=True),
-            className="text-end"
-        )
-    ], className="compound-card mb-3")
-
-def create_compounds_section(compounds):
-    """Creates a section displaying compound cards and summary info"""
-    
-    if not compounds:
+    def render(self, id_prefix="compound-viewer"):
+        """Render the compound viewer component."""
         return html.Div([
-            html.H4("Related Compounds"),
-            html.P("No compounds associated with this target", className="text-muted")
-        ], className="compounds-container")
-    
-    return html.Div([
-        html.H4("Related Compounds"),
-        html.Div([
-            dbc.Row([
-                dbc.Col(
-                    create_compound_card(compound),
-                    width=6
-                ) for compound in compounds
+            dbc.Card([
+                dbc.CardHeader("Compound Visualization"),
+                dbc.CardBody([
+                    dbc.Row([
+                        dbc.Col([
+                            html.Div([
+                                dbc.Label("SMILES String"),
+                                dbc.Input(
+                                    id=f"{id_prefix}-smiles-input",
+                                    type="text",
+                                    placeholder="Enter SMILES string...",
+                                    value=""
+                                ),
+                                dbc.Button(
+                                    "Render Structure",
+                                    id=f"{id_prefix}-render-btn",
+                                    color="primary",
+                                    className="mt-2"
+                                )
+                            ])
+                        ], md=6),
+                        dbc.Col([
+                            html.Div([
+                                html.Img(id=f"{id_prefix}-structure-img", className="img-fluid")
+                            ], className="text-center")
+                        ], md=6)
+                    ])
+                ])
             ])
-        ], className="compounds-list")
-    ], className="compounds-container")
+        ])
+    
+    def register_callbacks(self):
+        """Register Dash callbacks for the component."""
+        @self.app.callback(
+            Output("compound-viewer-structure-img", "src"),
+            [Input("compound-viewer-render-btn", "n_clicks")],
+            [State("compound-viewer-smiles-input", "value")]
+        )
+        def render_molecule(n_clicks, smiles):
+            if not n_clicks or not smiles:
+                return ""
+            
+            try:
+                # Parse SMILES and generate molecule
+                mol = Chem.MolFromSmiles(smiles)
+                if mol is None:
+                    return ""
+                
+                # Add hydrogen atoms
+                mol = Chem.AddHs(mol)
+                
+                # Generate 2D coordinates
+                AllChem.Compute2DCoords(mol)
+                
+                # Create an image
+                img = Draw.MolToImage(mol, size=(300, 300))
+                
+                # Convert image to base64 string for display
+                buffered = BytesIO()
+                img.save(buffered, format="PNG")
+                img_str = base64.b64encode(buffered.getvalue()).decode()
+                
+                return f"data:image/png;base64,{img_str}"
+            except Exception as e:
+                print(f"Error rendering molecule: {e}")
+                return ""
+
+def create_compound_batch_viewer(compounds):
+    """
+    Create a grid of compound structures from a list of compounds.
+    
+    Args:
+        compounds: List of compound objects with 'name' and 'smiles' attributes
+    
+    Returns:
+        HTML Div containing a grid of compound structures
+    """
+    if not compounds:
+        return html.Div("No compounds to display")
+    
+    # Filter compounds with valid SMILES
+    valid_compounds = [c for c in compounds if c.smiles]
+    
+    if not valid_compounds:
+        return html.Div("No valid SMILES strings to display")
+    
+    try:
+        # Create molecule objects
+        mols = []
+        legends = []
+        for compound in valid_compounds:
+            mol = Chem.MolFromSmiles(compound.smiles)
+            if mol:
+                mols.append(mol)
+                legends.append(compound.name)
+        
+        if not mols:
+            return html.Div("Could not parse any valid molecules")
+        
+        # Generate a grid of images
+        img = Draw.MolsToGridImage(mols, molsPerRow=3, subImgSize=(200, 200), legends=legends)
+        
+        # Convert to base64 for display
+        buffered = BytesIO()
+        img.save(buffered, format="PNG")
+        img_str = base64.b64encode(buffered.getvalue()).decode()
+        
+        return html.Div([
+            html.Img(src=f"data:image/png;base64,{img_str}", className="img-fluid")
+        ], className="text-center mt-3")
+    
+    except Exception as e:
+        print(f"Error rendering compound batch: {e}")
+        return html.Div(f"Error rendering compounds: {str(e)}")

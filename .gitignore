@@ -36,4 +36,4 @@ wheels/
 *.swo
 
 # Virtual environment
-target_env/
+targetdash_env/

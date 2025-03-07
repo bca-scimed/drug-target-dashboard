@@ -5,6 +5,7 @@ from app.models.database import Base
 
 class Compound(Base):
     __tablename__ = "compounds"
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
@@ -22,6 +23,7 @@ class Compound(Base):
 
 class CompoundActivity(Base):
     __tablename__ = "compound_activities"
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True)
     compound_id = Column(Integer, ForeignKey("compounds.id"))

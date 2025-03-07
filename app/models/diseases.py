@@ -5,6 +5,7 @@ from app.models.database import Base
 
 class Disease(Base):
     __tablename__ = "diseases"
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
@@ -21,6 +22,7 @@ class Disease(Base):
 
 class TargetDiseaseRelation(Base):
     __tablename__ = "target_disease_relations"
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True)
     target_id = Column(Integer, ForeignKey("targets.id"))
